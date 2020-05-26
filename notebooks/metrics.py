@@ -232,7 +232,7 @@ def calculate_final_score(all_predictions, score_threshold):
 #############################################################
 import torch
 
-def predict_eval_set(model, validation_loader):
+def predict_eval_set(model, validation_loader, imsize=512):
     all_predictions = []
 
     for images, targets, image_ids in tqdm(validation_loader, total=len(validation_loader)):
@@ -247,20 +247,20 @@ def predict_eval_set(model, validation_loader):
                 boxes[:, 2] = boxes[:, 2] + boxes[:, 0]
                 boxes[:, 3] = boxes[:, 3] + boxes[:, 1]
                 
-                gt_boxes = (targets[i]['boxes'].cpu().numpy()*2).clip(min=0, max=1023).astype(int)
+                gt_boxes = (targets[i]['boxes'].cpu().numpy()*(1024//imsize)).clip(min=0, max=1023).astype(int)
                 if hasattr(validation_loader.dataset, 'yxyx') and validation_loader.dataset.yxyx is True:
                     gt_boxes[:, [0,1,2,3]] = gt_boxes[:, [1,0,3,2]]
                 
                 all_predictions.append({
-                    'pred_boxes': (boxes*2).clip(min=0, max=1023).astype(int),
+                    'pred_boxes': (boxes*(1024//imsize)).clip(min=0, max=1023).astype(int),
                     'scores': scores,
                     'gt_boxes': gt_boxes,
                     'image_id': image_ids[i],
                 })
     return all_predictions
 
-def eval_metrics(model, validation_loader):
-    all_predictions = predict_eval_set(model, validation_loader)
+def eval_metrics(model, validation_loader, imsize=512):
+    all_predictions = predict_eval_set(model, validation_loader, imsize)
     
     metrics = {}
     score_thresholds = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
