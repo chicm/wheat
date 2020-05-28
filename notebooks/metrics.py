@@ -219,12 +219,23 @@ def calculate_final_score(all_predictions, score_threshold):
         pred_boxes = all_predictions[i]['pred_boxes'].copy()
         scores = all_predictions[i]['scores'].copy()
         image_id = all_predictions[i]['image_id']
+        labels = all_predictions[i]['labels']
 
         indexes = np.where(scores>score_threshold)
+        #print(indexes)
+        #print(labels)
         pred_boxes = pred_boxes[indexes]
         scores = scores[indexes]
-
-        image_precision = calculate_image_precision(gt_boxes, pred_boxes,thresholds=iou_thresholds,form='pascal_voc')
+        #print(len(scores))
+        
+        if labels[0] == 2: # no ground truth boxes
+            if len(scores) == 0:
+                image_precision = 1.
+            else:
+                image_precision = 0.
+        else:
+            image_precision = calculate_image_precision(gt_boxes, pred_boxes,thresholds=iou_thresholds,form='pascal_voc')
+        
         final_scores.append(image_precision)
 
     return np.mean(final_scores)
@@ -247,6 +258,7 @@ def predict_eval_set(model, validation_loader, imsize=512):
                 boxes[:, 2] = boxes[:, 2] + boxes[:, 0]
                 boxes[:, 3] = boxes[:, 3] + boxes[:, 1]
                 
+                labels = targets[i]['labels'].cpu().numpy()
                 gt_boxes = (targets[i]['boxes'].cpu().numpy()*(1024//imsize)).clip(min=0, max=1023).astype(int)
                 if hasattr(validation_loader.dataset, 'yxyx') and validation_loader.dataset.yxyx is True:
                     gt_boxes[:, [0,1,2,3]] = gt_boxes[:, [1,0,3,2]]
@@ -256,16 +268,17 @@ def predict_eval_set(model, validation_loader, imsize=512):
                     'scores': scores,
                     'gt_boxes': gt_boxes,
                     'image_id': image_ids[i],
+                    'labels': labels,
+                    'source': targets[i]['source']
                 })
     return all_predictions
 
-def eval_metrics(model, validation_loader, imsize=512):
-    all_predictions = predict_eval_set(model, validation_loader, imsize)
-    
+def find_best_metrics(all_predictions):
     metrics = {}
-    score_thresholds = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
+    score_thresholds = [0.3, 0.35, 0.37, 0.4, 0.42, 0.45, 0.47, 0.5, 0.55, 0.6]
     best_final_score, best_score_threshold = 0, 0
-    for score_threshold in tqdm(np.arange(0, 1, 0.01), total=np.arange(0, 1, 0.01).shape[0]):
+    #for score_threshold in tqdm(np.arange(0, 1, 0.01), total=np.arange(0, 1, 0.01).shape[0]):
+    for score_threshold in np.arange(0, 1, 0.01):
         final_score = calculate_final_score(all_predictions, score_threshold)
         if score_threshold in score_thresholds: 
             metrics[score_threshold] = round(final_score, 5)
@@ -275,4 +288,34 @@ def eval_metrics(model, validation_loader, imsize=512):
 
         metrics['best_score'] = round(best_final_score, 5)
         metrics['best_threshold'] = round(best_score_threshold, 5)
+    return metrics
+
+#def eval_metrics(model, validation_loader, imsize=512):
+#    all_predictions = predict_eval_set(model, validation_loader, imsize)
+    
+#    return find_best_metrics(all_predictions)
+
+def eval_metrics(model, validation_loader, imsize=512, by_source=False):
+    all_predictions = predict_eval_set(model, validation_loader, imsize)
+    all_metrics = find_best_metrics(all_predictions)
+    
+    if not by_source:
+        return all_metrics
+    
+    metrics = {}
+    metrics.update(all_metrics)
+    def get_preds_by_source(preds, src):
+        results = []
+        for p in preds:
+            if p['source'] == src:
+                results.append(p)
+        return results
+    
+    for source in ['arvalis_1', 'arvalis_2', 'arvalis_3', 'ethz_1', 'rres_1', 'usask_1', 'inrae_1', 'unknown']:
+        preds = get_preds_by_source(all_predictions, source)
+        metrics[source] = {
+            'score': round(calculate_final_score(preds, all_metrics['best_threshold']), 5), #find_best_metrics(preds)
+            'num': len(preds)
+        }
+
     return metrics
