@@ -313,9 +313,12 @@ def eval_metrics(model, validation_loader, imsize=512, by_source=False):
     
     for source in ['arvalis_1', 'arvalis_2', 'arvalis_3', 'ethz_1', 'rres_1', 'usask_1', 'inrae_1', 'unknown']:
         preds = get_preds_by_source(all_predictions, source)
+        source_metrics = find_best_metrics(preds)
         metrics[source] = {
             'score': round(calculate_final_score(preds, all_metrics['best_threshold']), 5), #find_best_metrics(preds)
-            'num': len(preds)
+            'num': len(preds),
+            'best_score': source_metrics['best_score'],
+            'best_threshold': source_metrics['best_threshold']
         }
 
     return metrics
