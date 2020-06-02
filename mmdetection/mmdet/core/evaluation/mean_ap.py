@@ -311,7 +311,7 @@ def eval_map(det_results,
 
     pool = Pool(nproc)
     eval_results = []
-    for i in range(num_classes):
+    for i in [1]: #range(num_classes):
         # get gt and det bboxes of this class
         cls_dets, cls_gts, cls_gts_ignore = get_cls_results(
             det_results, annotations, i)

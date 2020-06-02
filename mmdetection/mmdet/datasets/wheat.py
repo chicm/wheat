@@ -146,9 +146,25 @@ class WheatDataset(Dataset):
         self.pipeline = Compose(pipeline)
 
     def __len__(self):
+        print('>>>>>>>', len(self.data_infos), self.ann_file)
         return len(self.data_infos)
 
+    def load_inference_annos(self):
+        image_files = os.listdir(self.img_prefix)
+        data_info = []
+        for fn in image_files: 
+            ann = {
+                'filename': fn,
+                'width': 1024,
+                'height': 1024,
+            }
+            data_info.append(ann)
+        return data_info
+
     def load_annotations(self, ann_file):
+        if ann_file == 'inference': # or ann_file == 'val':
+            return self.load_inference_annos()
+
         df_folds, marking = get_train_folds_meta()
 
         #return mmcv.load(ann_file)
@@ -163,6 +179,8 @@ class WheatDataset(Dataset):
             img_ids = train_ids
         elif ann_file == 'val':
             img_ids = val_ids
+        else:
+            raise ValueError('ann file name')
         
         data_info = []
         for img_id in img_ids:
@@ -170,12 +188,14 @@ class WheatDataset(Dataset):
             if len(records) < 1:
                 labels = np.array([2.])
                 boxes = np.array([[0., 0., 1., 1.]])
+                source = 'unknown'
             else:
                 boxes = records[['x', 'y', 'w', 'h']].values
                 boxes[:, 2] = boxes[:, 0] + boxes[:, 2]
                 boxes[:, 3] = boxes[:, 1] + boxes[:, 3]
 
                 labels = np.array([1] * len(boxes))
+                source = records['source'].values[0]
 
             ann = {
                 'filename': f'{img_id}.jpg',
@@ -184,8 +204,9 @@ class WheatDataset(Dataset):
                 'ann': {
                     'bboxes': boxes.astype(np.float32),
                     'labels': labels.astype(np.long),
+                    'source': source
                     #'bboxes_ignore': <np.ndarray> (k, 4), (optional field)
-                    #'labels_ignore': <np.ndarray> (k, 4) (optional field)
+                    #'labels_ignore': <np.ndarray> (k, 4)  (optional field)
                 }
             }
             data_info.append(ann)
@@ -195,6 +216,8 @@ class WheatDataset(Dataset):
         return mmcv.load(proposal_file)
 
     def get_ann_info(self, idx):
+        if self.ann_file == 'inference':
+            return None
         return self.data_infos[idx]['ann']
 
     def get_cat_ids(self, idx):
@@ -315,6 +338,9 @@ class WheatDataset(Dataset):
             scale_ranges (list[tuple] | None): Scale ranges for evaluating mAP.
                 Default: None.
         """
+        print('VALIDATING...')
+        print(len(results), len(results[0]), results[0][1].shape)
+        print(results[0][1][:5])
         if not isinstance(metric, str):
             assert len(metric) == 1
             metric = metric[0]
@@ -322,17 +348,31 @@ class WheatDataset(Dataset):
         if metric not in allowed_metrics:
             raise KeyError(f'metric {metric} is not supported')
         annotations = [self.get_ann_info(i) for i in range(len(self))]
+
+        import pickle
+        print('saving')
+        with open('val_ann_2.pkl', 'wb') as f:
+            pickle.dump(self.data_infos, f)
+        with open('val_preds_2.pkl', 'wb') as f:
+            pickle.dump(results, f)
+        print('saved')
+
+
         eval_results = {}
         if metric == 'mAP':
             assert isinstance(iou_thr, float)
-            mean_ap, _ = eval_map(
-                results,
-                annotations,
-                scale_ranges=scale_ranges,
-                iou_thr=iou_thr,
-                dataset=self.CLASSES,
-                logger=logger)
-            eval_results['mAP'] = mean_ap
+            ap_results = []
+            for iou_thr in [0.5, 0.55, 0.6, 0.65, 0.7, 0.75]:
+                mean_ap, _ = eval_map(
+                    results,
+                    annotations,
+                    scale_ranges=scale_ranges,
+                    iou_thr=iou_thr,
+                    dataset=self.CLASSES,
+                    logger=logger)
+                ap_results.append(mean_ap)
+            eval_results['mAP'] = np.mean(ap_results)
+            print('>>>>>MAP:', np.mean(ap_results))
         elif metric == 'recall':
             gt_bboxes = [ann['bboxes'] for ann in annotations]
             if isinstance(iou_thr, float):
