@@ -1,0 +1,40 @@
+TensorFlow installation not found - running with reduced feature set.
+Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
+TensorBoard 2.2.2 at http://localhost:46000/ (Press CTRL+C to quit)
+TensorFlow installation not found - running with reduced feature set.
+TensorBoard 2.2.2 at http://879c3ba3-87ed-44f5-8d93-dd81f358c329:46000/ (Press CTRL+C to quit)
+E0628 03:38:17.982996 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:17] code 400, message Bad request version ('\x00\x01\x97|\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+E0628 03:38:19.029967 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:19] code 400, message Bad HTTP/0.9 request type ('\x00')
+E0628 03:38:20.077257 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:20] code 400, message Bad HTTP/0.9 request type ('\x00')
+E0628 03:38:20.137338 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:20] code 400, message Bad request syntax ('HELP')
+E0628 03:38:20.260598 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:20] code 400, message Bad request syntax ('\x16\x03\x00\x00S\x01\x00\x00O\x03\x00?G×÷º,îê²`~ó\x00ý\x82{¹Õ\x96Èw\x9bæÄÛ<=Ûoï\x10n\x00\x00(\x00\x16\x00\x13\x00')
+E0628 03:38:20.413221 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:20] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00*%à\x00\x00\x00\x00\x00Cookie:')
+E0628 03:38:20.534110 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:20] code 400, message Bad request version ('\x00/\x00')
+E0628 03:38:21.654561 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:21] code 400, message Bad request version ('0.12\x00')
+W0628 03:38:21.713495 140048169199360 application.py:594] path /nice ports,/Trinity.txt.bak not found, sending 404
+E0628 03:38:21.838019 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:21] code 400, message Bad request syntax ('0\x84\x00\x00\x00-\x02\x01\x07c\x84\x00\x00\x00$\x04\x00')
+E0628 03:38:22.951624 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:22] code 400, message Bad HTTP/0.9 request type ('0')
+E0628 03:38:23.998424 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:23] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00')
+E0628 03:38:25.045668 140048169199360 _internal.py:113] ::ffff:10.46.0.0 - - [28/Jun/2020 03:38:25] code 400, message Bad request version ('\x03\x00(\x00\x04ÿ\x08\x00\x01U\x00\x00\x00MSSQLServer\x00H\x0f\x00\x00')
+W0630 18:02:58.312529 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-10-03_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.313664 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-27-14_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.313739 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-17-08_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.313796 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_13-43-09_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.313849 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun29_08-34-36_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold4'
+W0630 18:02:58.313900 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-18-28_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.313950 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-14-50_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.313999 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_14-54-17_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314048 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-19-44_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314105 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_12-59-49_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314156 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_13-10-21_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314205 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_14-18-42_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314252 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_12-31-08_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314301 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_13-32-27_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314349 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-12-31_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314396 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-26-42_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314444 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun28_17-20-58_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold2'
+W0630 18:02:58.314491 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun28_03-43-13_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold1'
+W0630 18:02:58.314539 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-31-04_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314587 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_15-32-57_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
+W0630 18:02:58.314635 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun29_04-16-10_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold3'
+W0630 18:02:58.314683 140047665833728 plugin_event_multiplexer.py:263] Deleting accumulator 'Jun27_14-35-37_879c3ba3-87ed-44f5-8d93-dd81f358c329yolov5x_fold0'
